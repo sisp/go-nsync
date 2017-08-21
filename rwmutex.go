@@ -57,14 +57,14 @@ func (n *NamedRWMutex) Lock(name string) {
 	e.mutex.Lock()
 }
 
-// Unlock releases the write lock for name. If no write lock exists for name,
-// the function panics.
+// Unlock releases the write lock for name. If no mutex exists for name, the
+// function panics.
 func (n *NamedRWMutex) Unlock(name string) {
 	n.mutex.Lock()
 	defer n.mutex.Unlock()
 	e, ok := n.mutexMap[name]
 	if !ok {
-		panic("no named mutex acquired: " + name)
+		panic("no named mutex found for '" + name + "'")
 	}
 	e.mutex.Unlock()
 	e.num--
@@ -87,14 +87,14 @@ func (n *NamedRWMutex) RLock(name string) {
 	e.mutex.RLock()
 }
 
-// RUnlock releases the read lock for name. If no write lock exists for name,
-// the function panics.
+// RUnlock releases the read lock for name. If no mutex exists for name, the
+// function panics.
 func (n *NamedRWMutex) RUnlock(name string) {
 	n.mutex.Lock()
 	defer n.mutex.Unlock()
 	e, ok := n.mutexMap[name]
 	if !ok {
-		panic("no named mutex acquired: " + name)
+		panic("no named mutex found for '" + name + "'")
 	}
 	e.mutex.RUnlock()
 	e.num--
